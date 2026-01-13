@@ -46,6 +46,22 @@ def create_app() -> FastAPI:
         """Initialize database on startup."""
         create_db_and_tables()
 
+    # Root endpoint (public)
+    @app.get("/")
+    async def root():
+        """Root endpoint - API information."""
+        return {
+            "name": settings.app_name,
+            "version": settings.app_version,
+            "status": "running",
+            "endpoints": {
+                "health": "/health",
+                "docs": "/docs",
+                "api": "/api/{user_id}/tasks"
+            },
+            "message": "Todo API is running! Visit /docs for interactive API documentation."
+        }
+
     # Health check endpoint (public)
     @app.get("/health")
     async def health_check():
