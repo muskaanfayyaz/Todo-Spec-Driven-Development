@@ -1,0 +1,36 @@
+{
+  "name": "todo-app-monorepo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Todo App Phase II - Monorepo with Next.js Frontend and FastAPI Backend",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python -m app.main",
+    "build:frontend": "cd frontend && npm run build",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && pip install -e .",
+    "setup": "npm run install:frontend && npm run install:backend",
+    "clean": "rm -rf frontend/node_modules frontend/.next backend/venv backend/**/__pycache__"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/todo-app-phase2"
+  },
+  "keywords": [
+    "todo",
+    "nextjs",
+    "fastapi",
+    "clean-architecture",
+    "spec-kit-plus",
+    "multi-user"
+  ],
+  "author": "Claude Code (Spec-Kit Plus)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

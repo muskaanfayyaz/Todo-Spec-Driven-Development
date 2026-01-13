@@ -1,0 +1,65 @@
+# Phase II Monorepo .gitignore
+
+# Python (Backend)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node.js (Frontend)
+node_modules/
+/.pnp
+.pnp.js
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment variables
+.env
+.env.local
+.env*.local
+backend/.env
+frontend/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+/coverage
+
+# Misc
+.DS_Store
+*.pem
+
+# Vercel
+.vercel
+
+# Phase I (keep as reference)
+# src/ is intentionally tracked for reference
+
+# Session history (tracked for audit trail)
+# history/ is intentionally tracked

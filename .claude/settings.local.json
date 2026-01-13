@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(python3:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(test:*)",
+      "Bash(ls:*)",
+      "Bash(timeout 5 python:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(echo:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 30 python3:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(curl:*)"
     ]
   }
 }

@@ -1,0 +1,25 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "NEXT_PUBLIC_API_URL": {
+      "description": "Backend API URL (e.g., https://api.yourdomain.com)",
+      "required": true
+    },
+    "BETTER_AUTH_SECRET": {
+      "description": "Shared secret for JWT signing (MUST match backend)",
+      "required": true
+    },
+    "BETTER_AUTH_URL": {
+      "description": "Frontend URL for Better Auth callbacks",
+      "required": true
+    },
+    "DATABASE_URL": {
+      "description": "Neon PostgreSQL connection string for Better Auth user storage",
+      "required": true
+    }
+  }
+}

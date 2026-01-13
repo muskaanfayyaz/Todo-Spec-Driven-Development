@@ -1,408 +1,284 @@
-# Todo CLI - Phase 1: In-Memory Task Manager
+# Todo App - Full-Stack Multi-User Application
 
-A clean, beginner-friendly **menu-driven** command-line todo application built with Python 3.13+ following Clean Architecture principles. Features an intuitive numbered menu interface with step-by-step prompts, perfect for learning professional software design patterns in an accessible way.
+**Version:** Phase II (v2.0) — Production-Ready
+**Architecture:** Clean Architecture with Multi-User Support
+**Deployment:** Vercel (Frontend) + Neon (Database)
 
-## Table of Contents
-
-- [Quick Start](#quick-start)
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Setup Instructions](#setup-instructions)
-- [Usage](#usage)
-- [Available Commands](#available-commands)
-- [Menu-Driven vs Command-Based Interface](#menu-driven-vs-command-based-interface)
-- [Phase 1 Scope](#phase-1-scope)
-- [Project Structure](#project-structure)
-- [Design Decisions](#design-decisions)
-- [Future Phases](#future-phases)
-- [Example Session](#example-session)
-- [Error Handling Examples](#error-handling-examples)
-- [Contributing](#contributing)
+A professionally architected full-stack todo application demonstrating Clean Architecture principles, spec-driven development, and AI-assisted code generation. **Phase I** implemented a CLI application, **Phase II** extends it to a multi-user web application with authentication, REST API, and modern web UI.
 
 ---
 
-## Quick Start
+## 📋 Table of Contents
 
-Want to jump right in? Here's how to get started in under a minute:
-
-```bash
-# 1. Clone the repository
-git clone <repository-url>
-cd todo-cli-phase1
-
-# 2. Run the application (Python 3.13+ required)
-cd src
-python3 main.py
-```
-
-That's it! You'll see a numbered menu (1-8). Simply select an option and follow the prompts.
-
-**Example First Interaction:**
-```
-Select an option (1-8): 1
-Enter task title: My first task
-Enter task description (optional): Learning to use Todo CLI
-
-✓ Task created successfully!
-```
-
-**Two ways to interact:**
-- **Beginner:** Select menu numbers (1-8) and follow prompts
-- **Power user:** Type commands directly (e.g., `add "Task" "Description"`)
+- [Overview](#overview)
+- [Live Demo](#live-demo)
+- [Quick Start](#quick-start)
+- [Phase Evolution](#phase-evolution)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Setup Instructions](#setup-instructions)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Development Approach](#development-approach)
 
 ---
 
 ## Overview
 
-Todo CLI is a terminal-based task management application designed to demonstrate clean code principles and architectural patterns while remaining accessible to beginners. The application provides a simple, intuitive **menu-driven interface** for managing daily tasks entirely in memory, with support for both guided prompts and direct command entry.
+This project is a **full-stack todo application** built in two phases:
+
+- **Phase I:** Command-line interface (CLI) with in-memory storage
+- **Phase II:** Multi-user web application with authentication and database persistence
 
 **Key Highlights:**
-- **Menu-Driven Interface** - Numbered options (1-8) for easy navigation
-- **Dual Input Mode** - Choose between menu prompts or direct commands
-- **Clean Architecture** - Professional implementation with clear layer separation
-- **100% Python Standard Library** - No external dependencies required
-- **Beginner-Friendly** - Clear prompts, helpful error messages, and intuitive flow
-- **Professional Error Handling** - Comprehensive validation and user guidance
-- **Beautiful Output** - Formatted tables with box-drawing characters
-- **Interactive Experience** - Step-by-step prompts for all operations
+- ✅ **Clean Architecture** — Domain, Application, Infrastructure, Presentation layers
+- ✅ **Spec-Driven Development** — All code generated from detailed specifications
+- ✅ **Multi-User Support** — User authentication with JWT and data isolation
+- ✅ **Modern Web Stack** — Next.js frontend + FastAPI backend + PostgreSQL database
+- ✅ **Production-Ready** — Deployable to Vercel + Neon with comprehensive testing
+- ✅ **AI-Assisted Development** — Built using Claude Code (Spec-Kit Plus methodology)
 
 ---
 
-## Features
+## Live Demo
 
-- **Menu-Driven Interface**: User-friendly numbered menu (1-8) for easy navigation
-- **Dual Input Mode**: Choose between menu-driven or direct command entry
-- **Create Tasks**: Add tasks with titles and optional descriptions through guided prompts
-- **List Tasks**: View all tasks in a formatted table with box-drawing characters
-- **Update Tasks**: Modify task titles and descriptions with flexible options
-- **Delete Tasks**: Remove tasks you no longer need
-- **Task Status**: Mark tasks as completed or pending with visual feedback
-- **Command Aliases**: Multiple ways to invoke commands (e.g., `ls`, `list`, `all`)
-- **Input Validation**: Comprehensive validation with helpful error messages
-- **Beautiful Output**: Formatted tables with borders and clear success/error messages
-- **Interactive Prompts**: Step-by-step guidance for each operation
+**Frontend:** [https://yourdomain.vercel.app](https://yourdomain.vercel.app) *(Update after deployment)*
+**Backend API:** [https://api.yourdomain.com](https://api.yourdomain.com) *(Update after deployment)*
+
+**Test Credentials:**
+- Use the registration page to create your own account
+- Each user has isolated task data
 
 ---
 
-## Tech Stack
+## Quick Start
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Python** | 3.13+ | Programming language |
-| **UV** | Latest | Package and project management |
-| **typing** | stdlib | Type hints for code quality |
-| **dataclasses** | stdlib | Simplified entity classes |
-| **enum** | stdlib | Task status enumeration |
-| **datetime** | stdlib | Timestamp handling |
-| **abc** | stdlib | Abstract base classes |
+### Development Environment
 
-**No External Dependencies** - This project uses only Python's standard library to keep it simple and accessible.
+**Prerequisites:**
+- Node.js 20+ and npm 10+
+- Python 3.13+
+- Git
 
----
+**Clone and Setup:**
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd todo-cli-phase1
 
-## Architecture
+# 2. Install dependencies (frontend + backend)
+npm run setup
 
-This project follows **Clean Architecture** (Hexagonal Architecture) with clear separation of concerns:
+# 3. Configure environment variables
+cp backend/.env.example backend/.env
+cp frontend/.env.local.example frontend/.env.local
+# Edit both files with your configuration (see ENVIRONMENT_SETUP.md)
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Presentation Layer                      │
-│              (CLI Interface & Handlers)                  │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Application Layer                       │
-│              (Use Cases & Business Logic)                │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Domain Layer                          │
-│              (Entities & Business Rules)                 │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│                 Infrastructure Layer                     │
-│              (In-Memory Data Storage)                    │
-└─────────────────────────────────────────────────────────┘
+# 4. Start development servers
+# Terminal 1 - Backend (FastAPI)
+npm run dev:backend
+
+# Terminal 2 - Frontend (Next.js)
+npm run dev:frontend
 ```
 
-**Benefits:**
-- Easy to test (isolated business logic)
-- Easy to extend (add new storage in future phases)
-- Easy to understand (clear responsibilities)
-- Beginner-friendly (follows SOLID principles)
+**Access Application:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
 
 ---
 
-## Setup Instructions
+## Phase Evolution
 
-### Prerequisites
+### Phase I: CLI Application (v1.0)
 
-- Python 3.13 or higher
-- UV package manager ([Installation Guide](https://github.com/astral-sh/uv))
+**Status:** ✅ Complete
+**Location:** `/src/` directory
 
-### Installation
+**Features:**
+- Menu-driven command-line interface
+- In-memory task storage
+- Six core operations (Add, List, Update, Delete, Complete, Uncomplete)
+- Clean Architecture implementation
+- Zero external dependencies (Python stdlib only)
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd todo-cli-phase1
-   ```
-
-2. **Install UV** (if not already installed)
-   ```bash
-   # macOS/Linux
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-
-   # Windows
-   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-   ```
-
-3. **Set up the project** (Optional - no dependencies needed)
-   ```bash
-   uv sync
-   ```
-
----
-
-## Usage
-
-### Running the Application
-
-Navigate to the `src` directory and run:
-
+**Run Phase I:**
 ```bash
 cd src
 python3 main.py
 ```
 
-Or using UV:
-
-```bash
-cd src
-uv run python main.py
-```
-
-### First-Time User Experience
-
-```
-╔════════════════════════════════════════════════════╗
-║            Welcome to Todo CLI v1.0!               ║
-║        Your simple in-memory task manager          ║
-╚════════════════════════════════════════════════════╝
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8):
-```
-
-**Note:** The application features a user-friendly menu-driven interface. Simply enter a number (1-8) to select an option. Advanced users can also type commands directly (e.g., `add`, `list`, `delete`).
+**Documentation:** [Phase I README](history/README.md) | [CLAUDE.md](CLAUDE.md) | [CONSTITUTION.md](CONSTITUTION.md)
 
 ---
 
-## Available Commands
+### Phase II: Web Application (v2.0)
 
-### Menu Options
+**Status:** ✅ Complete
+**Location:** `/frontend/` and `/backend/` directories
 
-The application features an intuitive menu-driven interface:
+**New Features:**
+- 🔐 **User Authentication** — Better Auth with JWT tokens
+- 🌐 **REST API** — FastAPI backend with OpenAPI documentation
+- 💾 **Database Persistence** — Neon PostgreSQL (serverless)
+- 🎨 **Modern Web UI** — Next.js 14+ with Tailwind CSS
+- 👥 **Multi-User Support** — User isolation and ownership
+- 🚀 **Production Ready** — Vercel deployment with environment configuration
 
-| Option | Command | Aliases | Description |
-|--------|---------|---------|-------------|
-| **1** | `add` | `create`, `new` | Create a new task with title and description |
-| **2** | `list` | `ls`, `all` | Display all tasks in a formatted table |
-| **3** | `update` | `edit`, `modify` | Update a task's title or description |
-| **4** | `delete` | `remove`, `rm` | Delete a task permanently |
-| **5** | `complete` | `done`, `finish` | Mark task as completed |
-| **6** | `uncomplete` | `incomplete`, `undo` | Mark task as pending |
-| **7** | `help` | `?`, `h` | Show detailed help message |
-| **8** | `exit` | `quit`, `q` | Exit the application |
+**Core Principles:**
+- ✅ **Phase I Preserved** — Domain and Application layers unchanged
+- ✅ **Spec Compliance** — All features from specifications implemented
+- ✅ **Clean Architecture** — Proper layer separation maintained
+- ✅ **Security First** — JWT auth, user isolation, validation at all layers
 
-**Two Ways to Use:**
-1. **Menu-driven (Beginner-friendly):** Select option numbers (1-8) and follow prompts
-2. **Command-based (Power users):** Type commands directly with arguments
+**Documentation:** [Phase II README](README_PHASE2.md) | [CLAUDE_PHASE2.md](CLAUDE_PHASE2.md) | [CONSTITUTION_PHASE2.md](CONSTITUTION_PHASE2.md)
 
-### Detailed Usage Examples
+---
 
-#### 1. Add a Task (Menu-driven)
+## Tech Stack
+
+### Frontend (Next.js)
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Next.js** | 14+ | React framework with App Router |
+| **React** | 18+ | UI library |
+| **TypeScript** | 5+ | Type safety |
+| **Tailwind CSS** | 3+ | Utility-first styling |
+| **Better Auth** | Latest | Authentication library |
+
+### Backend (FastAPI)
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **FastAPI** | Latest | Modern Python web framework |
+| **SQLModel** | Latest | Type-safe ORM (SQLAlchemy + Pydantic) |
+| **Pydantic** | 2+ | Data validation |
+| **PyJWT** | Latest | JWT token verification |
+| **Uvicorn** | Latest | ASGI server |
+| **Alembic** | Latest | Database migrations |
+
+### Database & Infrastructure
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Neon PostgreSQL** | 15+ | Serverless PostgreSQL database |
+| **Vercel** | Latest | Frontend hosting platform |
+| **Render/Railway** | Latest | Backend hosting (alternative platforms) |
+
+---
+
+## Architecture
+
+### Clean Architecture Layers
+
 ```
-Select an option (1-8): 1
-Enter task title: Buy groceries
-Enter task description (optional): Milk, eggs, bread
-
-✓ Task created successfully!
-
-  ID: 1
-  Title: Buy groceries
-  Description: Milk, eggs, bread
-  Status: pending
-  Created: 2025-12-26 14:30:45
+┌───────────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                          │
+│  Phase I: CLI Interface (src/presentation/)                   │
+│  Phase II: REST API + Web UI (backend/app/presentation/,      │
+│            frontend/app/, frontend/components/)                │
+│  - API routes (FastAPI)                                        │
+│  - React components (Next.js)                                  │
+│  - Request/response schemas                                    │
+└────────────────────────┬──────────────────────────────────────┘
+                         │
+┌────────────────────────▼──────────────────────────────────────┐
+│                    APPLICATION LAYER                           │
+│  (UNCHANGED FROM PHASE I)                                      │
+│  Location: backend/app/application/                            │
+│  - Use Cases: AddTask, ListTasks, UpdateTask, etc.           │
+│  - Repository interface (abstract)                            │
+│  - Business logic orchestration                               │
+└────────────────────────┬──────────────────────────────────────┘
+                         │
+┌────────────────────────▼──────────────────────────────────────┐
+│                      DOMAIN LAYER                              │
+│  (UNCHANGED FROM PHASE I)                                      │
+│  Location: backend/app/domain/                                 │
+│  - Task entity with validation                                │
+│  - TaskStatus value object                                    │
+│  - Domain exceptions                                           │
+│  - Business rules                                              │
+└────────────────────────┬──────────────────────────────────────┘
+                         │
+┌────────────────────────▼──────────────────────────────────────┐
+│                  INFRASTRUCTURE LAYER                          │
+│  Phase I: In-memory repository (src/infrastructure/)          │
+│  Phase II: PostgreSQL repository (backend/app/infrastructure/)│
+│  - Database models (SQLModel)                                  │
+│  - PostgreSQL repository implementation                        │
+│  - External service integrations                               │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-Or using direct command:
+### Multi-User Data Flow
+
 ```
-Select an option (1-8): add "Buy groceries" "Milk, eggs, bread"
-```
-
-#### 2. List All Tasks
-```
-Select an option (1-8): 2
-
-┌────┬────────────────────┬──────────────────────┬───────────┐
-│ ID │ Title              │ Description          │ Status    │
-├────┼────────────────────┼──────────────────────┼───────────┤
-│ 1  │ Buy groceries      │ Milk, eggs, bread    │ pending   │
-│ 2  │ Call dentist       │                      │ pending   │
-│ 3  │ Finish report      │ Q4 sales analysis    │ completed │
-└────┴────────────────────┴──────────────────────┴───────────┘
-
-Total: 3 tasks (2 pending, 1 completed)
-```
-
-#### 3. Update a Task (Menu-driven)
-```
-Select an option (1-8): 3
-Enter task ID: 1
-
-What would you like to update?
-1. Title only
-2. Description only
-3. Both title and description
-Select option (1-3): 1
-Enter new title: Buy groceries and supplies
-
-✓ Task 1 updated successfully!
-
-  ID: 1
-  Title: Buy groceries and supplies
-  Description: Milk, eggs, bread
-  Status: pending
-  Created: 2025-12-26 14:30:45
-```
-
-Or using direct command:
-```
-Select an option (1-8): update 1 --title "Shopping" --description "Weekly groceries"
-```
-
-#### 4. Complete a Task
-```
-Select an option (1-8): 5
-Enter task ID: 1
-
-✓ Task 1 marked as completed!
-
-  Title: Buy groceries
-  Status: completed
-```
-
-#### 5. Delete a Task
-```
-Select an option (1-8): 4
-Enter task ID: 1
-
-✓ Task 1 deleted successfully!
+┌─────────────┐
+│   Browser   │
+│  (React UI) │
+└──────┬──────┘
+       │
+       │ 1. Login/Register
+       ▼
+┌─────────────────────────┐
+│   Better Auth Server    │
+│  (Next.js API Routes)   │
+│                         │
+│  - Creates user in DB   │
+│  - Generates JWT token  │
+│  - Returns to frontend  │
+└──────┬──────────────────┘
+       │
+       │ 2. API Request (with JWT)
+       ▼
+┌─────────────────────────┐
+│   FastAPI Backend       │
+│                         │
+│  - Verifies JWT         │
+│  - Extracts user_id     │
+│  - Validates access     │
+└──────┬──────────────────┘
+       │
+       │ 3. Query with user_id filter
+       ▼
+┌─────────────────────────┐
+│   PostgreSQL Database   │
+│  (Neon)                 │
+│                         │
+│  SELECT * FROM tasks    │
+│  WHERE user_id = ?      │
+└─────────────────────────┘
 ```
 
 ---
 
-## Menu-Driven vs Command-Based Interface
+## Features
 
-This application supports **two ways of interaction** to accommodate different user preferences:
+### Core Features (All Phases)
 
-### 1. Menu-Driven Mode (Recommended for Beginners)
+- ✅ **Create Tasks** — Add tasks with title and optional description
+- ✅ **List Tasks** — View all tasks with filtering options
+- ✅ **Update Tasks** — Modify task title and description
+- ✅ **Delete Tasks** — Remove tasks permanently
+- ✅ **Complete/Uncomplete** — Toggle task completion status
+- ✅ **Input Validation** — Comprehensive validation at all layers
 
-Simply select a number from the menu (1-8) and follow the interactive prompts:
+### Phase II Additional Features
 
-```bash
-Select an option (1-8): 1        # Choose "Add Task"
-Enter task title: Buy groceries   # Enter title when prompted
-Enter task description (optional): Milk, bread, eggs  # Enter description
-```
-
-**Benefits:**
-- No need to remember command syntax
-- Step-by-step guidance
-- Interactive prompts for all inputs
-- Clear options displayed at each step
-- Ideal for beginners and casual users
-
-### 2. Command-Based Mode (For Power Users)
-
-Type commands directly with arguments for faster operation:
-
-```bash
-Select an option (1-8): add "Buy groceries" "Milk, bread, eggs"
-Select an option (1-8): list
-Select an option (1-8): complete 1
-Select an option (1-8): delete 2
-```
-
-**Benefits:**
-- Faster for experienced users
-- Command aliases supported (e.g., `ls`, `rm`, `done`)
-- No multiple prompts needed
-- Direct control over all parameters
-- Ideal for power users and automation
-
-### Flexibility
-
-You can **switch between modes at any time**! Use menu numbers when you need guidance, and use direct commands when you know what you want to do. The choice is yours.
-
----
-
-## Phase 1 Scope
-
-### What's Included ✅
-
-- **Menu-Driven Interface**: Numbered menu (1-8) with guided prompts
-- **Dual Input Mode**: Menu-driven for beginners, direct commands for power users
-- **Core CRUD Operations**: Create, Read, Update, Delete tasks
-- **Task Status Management**: Mark tasks as completed or pending
-- **Interactive Prompts**: Step-by-step guidance for all operations
-- **In-Memory Storage**: Fast, simple dictionary-based storage
-- **Clean Architecture**: Proper layer separation for future extensibility
-- **Input Validation**: Comprehensive validation with helpful error messages
-- **Command Aliases**: Multiple ways to invoke commands (e.g., `ls`, `list`, `all`)
-- **Beautiful Formatting**: Tables with box-drawing characters and formatted output
-- **Error Handling**: Clear, actionable error messages with usage hints
-
-### What's NOT Included ❌
-
-- File persistence (coming in Phase 2)
-- Database storage (coming in Phase 3)
-- Task prioritization
-- Due dates or reminders
-- Task categories or tags
-- Search and filtering
-- Multi-user support
-- Web interface
-- Task dependencies
-
-### Why In-Memory Only?
-
-Phase 1 focuses on:
-1. **Learning Clean Architecture** without infrastructure complexity
-2. **Building a solid foundation** for future phases
-3. **Keeping it simple** for educational purposes
-4. **Fast iteration** during development
-
-**Important:** All data is lost when you exit the application. This is intentional for Phase 1.
+- 🔐 **User Authentication** — Email/password with Better Auth
+- 👤 **User Registration** — Self-service account creation
+- 🔑 **JWT Tokens** — Secure stateless authentication
+- 🔒 **User Isolation** — Each user sees only their own tasks
+- 🌐 **REST API** — RESTful endpoints with OpenAPI docs
+- 🎨 **Modern Web UI** — Responsive design with Tailwind CSS
+- 📱 **Mobile Friendly** — Works on all device sizes
+- ⚡ **Real-time Updates** — Optimistic UI updates
+- 🛡️ **Security** — Defense-in-depth validation strategy
 
 ---
 
@@ -410,359 +286,343 @@ Phase 1 focuses on:
 
 ```
 todo-cli-phase1/
-├── README.md                          # Project documentation
-├── CLAUDE.md                          # AI-assisted development documentation
-├── specs/                             # Specification documents
-│   ├── functional_spec.md            # Functional requirements
-│   ├── architecture_spec.md          # Technical architecture
-│   └── cli_flow_spec.md              # CLI interaction flows
+├── frontend/                    # Next.js application (Phase II)
+│   ├── app/                     # App Router pages and layouts
+│   │   ├── (auth)/              # Authentication pages
+│   │   │   ├── login/           # Login page
+│   │   │   └── register/        # Registration page
+│   │   ├── tasks/               # Task management page
+│   │   ├── layout.tsx           # Root layout
+│   │   └── page.tsx             # Home/redirect page
+│   ├── components/              # Reusable React components
+│   │   └── tasks/               # Task-specific components
+│   ├── lib/                     # Utilities and API clients
+│   │   ├── api-client.ts        # Backend API client
+│   │   ├── auth.ts              # Better Auth client
+│   │   └── auth-server.ts       # Better Auth server
+│   ├── .env.local               # Environment variables (not committed)
+│   └── package.json             # Frontend dependencies
 │
-└── src/                              # Source code (Clean Architecture)
-    ├── __init__.py                   # Package initialization
-    ├── __main__.py                   # Module execution entry point
-    ├── main.py                       # Application entry point & composition root
-    │
-    ├── domain/                       # Domain Layer (Business Logic)
-    │   ├── __init__.py
-    │   ├── entities/
-    │   │   ├── __init__.py
-    │   │   └── task.py              # Task entity with business rules
-    │   ├── value_objects/
-    │   │   ├── __init__.py
-    │   │   └── task_status.py       # TaskStatus enum (pending/completed)
-    │   └── exceptions.py             # Domain-specific exceptions
-    │
-    ├── application/                  # Application Layer (Use Cases)
-    │   ├── __init__.py
-    │   ├── interfaces/
-    │   │   ├── __init__.py
-    │   │   └── task_repository.py   # Repository interface (dependency inversion)
-    │   └── use_cases/
-    │       ├── __init__.py
-    │       ├── add_task.py          # Add new task use case
-    │       ├── list_tasks.py        # List all tasks use case
-    │       ├── update_task.py       # Update task use case
-    │       ├── delete_task.py       # Delete task use case
-    │       ├── complete_task.py     # Complete task use case
-    │       └── uncomplete_task.py   # Mark task as pending use case
-    │
-    ├── infrastructure/               # Infrastructure Layer (External concerns)
-    │   ├── __init__.py
-    │   └── repositories/
-    │       ├── __init__.py
-    │       └── in_memory_task_repository.py  # Dictionary-based storage
-    │
-    └── presentation/                 # Presentation Layer (User Interface)
-        ├── __init__.py
-        └── cli/
-            ├── __init__.py
-            ├── cli.py               # Menu-driven CLI & REPL loop
-            ├── command_handlers.py  # Command handler classes
-            └── formatters.py        # Output formatting (tables, details)
+├── backend/                     # FastAPI application (Phase II)
+│   ├── app/
+│   │   ├── domain/              # Domain layer (from Phase I)
+│   │   │   ├── entities/        # Task entity
+│   │   │   ├── value_objects/   # TaskStatus enum
+│   │   │   └── exceptions.py    # Domain exceptions
+│   │   ├── application/         # Application layer (from Phase I)
+│   │   │   ├── interfaces/      # Repository interface
+│   │   │   └── use_cases/       # Business logic use cases
+│   │   ├── infrastructure/      # Infrastructure layer (new)
+│   │   │   ├── models.py        # SQLModel database models
+│   │   │   └── repositories/    # PostgreSQL repository
+│   │   ├── presentation/        # Presentation layer (new)
+│   │   │   ├── routers/         # FastAPI routers
+│   │   │   └── schemas/         # Pydantic request/response schemas
+│   │   ├── auth.py              # JWT verification
+│   │   ├── config.py            # Configuration management
+│   │   ├── database.py          # Database connection
+│   │   └── main.py              # FastAPI application entry point
+│   ├── alembic/                 # Database migrations
+│   ├── .env                     # Environment variables (not committed)
+│   └── pyproject.toml           # Backend dependencies
+│
+├── src/                         # Phase I CLI application (preserved)
+│   ├── domain/                  # Domain layer
+│   ├── application/             # Application layer
+│   ├── infrastructure/          # In-memory repository
+│   ├── presentation/            # CLI interface
+│   └── main.py                  # CLI entry point
+│
+├── specs/                       # Comprehensive specifications
+│   ├── overview.md              # Project overview
+│   ├── architecture_spec.md     # Architecture decisions (Phase I)
+│   ├── functional_spec.md       # Functional requirements (Phase I)
+│   ├── cli_flow_spec.md         # CLI interface spec (Phase I)
+│   ├── phase2-plan.md           # Phase II implementation plan
+│   ├── api/                     # API specifications
+│   │   └── rest-endpoints.md    # REST API specification
+│   ├── database/                # Database specifications
+│   │   └── schema.md            # PostgreSQL schema
+│   ├── features/                # Feature specifications
+│   │   ├── task-crud.md         # Task CRUD operations
+│   │   └── authentication.md    # Authentication flows
+│   └── ui/                      # UI specifications
+│       ├── pages.md             # Page specifications
+│       └── components.md        # Component specifications
+│
+├── history/                     # Development audit trail
+│   ├── chunk-docs/              # Implementation phase documents
+│   └── README.md                # Historical documentation
+│
+├── .gitignore                   # Git ignore rules
+├── package.json                 # Monorepo scripts
+├── README.md                    # This file
+├── README_PHASE2.md             # Phase II detailed documentation
+├── ENVIRONMENT_SETUP.md         # Environment variables guide
+├── CONSTITUTION_PHASE2.md       # Phase II architectural rules
+├── CLAUDE_PHASE2.md             # AI development guide
+└── CHUNK6_INTEGRATION_COMPLETE.md  # Integration documentation
 ```
 
-### Layer Responsibilities
-
-| Layer | Purpose | Dependencies |
-|-------|---------|--------------|
-| **Domain** | Core business logic, entities, and rules | None (innermost layer) |
-| **Application** | Use cases orchestrating domain logic | Domain only |
-| **Infrastructure** | External concerns (storage, I/O) | Domain, Application interfaces |
-| **Presentation** | User interface (CLI, menu system) | Application use cases |
-
-**Note:** The architecture follows the **Dependency Rule**: outer layers depend on inner layers, never the reverse. This ensures the domain remains independent and testable.
-
 ---
 
-## Design Decisions
+## Setup Instructions
 
-### Why Clean Architecture?
+### Prerequisites
 
-1. **Testability**: Business logic is isolated and easy to test
-2. **Flexibility**: Easy to swap storage implementations
-3. **Maintainability**: Clear separation of concerns
-4. **Educational**: Demonstrates professional patterns
-5. **Scalability**: Prepared for future phases
+**Required:**
+- Node.js 20+ and npm 10+
+- Python 3.13+
+- Git
 
-### Why No External Dependencies?
+**Optional (for production):**
+- Neon account (free tier available)
+- Vercel account (free tier available)
 
-1. **Simplicity**: Easy to understand and run
-2. **Learning**: Focus on architecture, not libraries
-3. **Portability**: Runs anywhere Python 3.13+ is installed
-4. **Beginner-Friendly**: No complex dependency management
+### Development Setup
 
-### Why UV for Package Management?
-
-1. **Modern**: Latest Python tooling
-2. **Fast**: Faster than pip
-3. **Simple**: Easy to use
-4. **Professional**: Industry best practice
-
-### Why Menu-Driven Interface?
-
-1. **Beginner-Friendly**: No need to memorize command syntax
-2. **Guided Experience**: Step-by-step prompts reduce errors
-3. **Discoverability**: All options visible at a glance
-4. **Flexibility**: Supports both menu and direct command modes
-5. **Professional**: Common pattern in enterprise CLI applications
-6. **Reduced Cognitive Load**: Users focus on tasks, not syntax
-
-### Implementation Highlights
-
-**Dual-Mode Support:**
-- Menu numbers (1-8) for guided interaction
-- Direct commands for power users
-- Command aliases for flexibility
-- Seamless switching between modes
-
-**User Experience:**
-- Clear visual menu with box-drawing characters
-- Interactive prompts for complex operations (e.g., update task)
-- Contextual help messages
-- Graceful error handling with recovery hints
-
----
-
-## Future Phases
-
-### Phase 2: File Persistence
-- Save tasks to JSON file
-- Load tasks on startup
-- Data survives application restart
-- No changes to domain/application layers (demonstrates Clean Architecture benefits!)
-
-### Phase 3: Database Storage
-- SQLite integration
-- Proper data persistence
-- Query optimization
-- Migration support
-
-### Phase 4: Advanced Features
-- Task prioritization (high/medium/low)
-- Due dates and reminders
-- Task categories and tags
-- Search and filtering
-- Export/Import (JSON, CSV)
-
----
-
-## Example Session
-
-Here's a complete example of using Todo CLI with the menu-driven interface:
-
+**1. Clone Repository:**
 ```bash
-$ cd src && python3 main.py
-
-╔════════════════════════════════════════════════════╗
-║            Welcome to Todo CLI v1.0!               ║
-║        Your simple in-memory task manager          ║
-╚════════════════════════════════════════════════════╝
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8): 1
-Enter task title: Buy groceries
-Enter task description (optional): Milk, eggs, bread
-
-✓ Task created successfully!
-
-  ID: 1
-  Title: Buy groceries
-  Description: Milk, eggs, bread
-  Status: pending
-  Created: 2025-12-26 14:30:45
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8): 1
-Enter task title: Call dentist
-Enter task description (optional):
-
-✓ Task created successfully!
-
-  ID: 2
-  Title: Call dentist
-  Description:
-  Status: pending
-  Created: 2025-12-26 14:31:12
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8): 2
-
-┌────┬────────────────────┬──────────────────────┬───────────┐
-│ ID │ Title              │ Description          │ Status    │
-├────┼────────────────────┼──────────────────────┼───────────┤
-│ 1  │ Buy groceries      │ Milk, eggs, bread    │ pending   │
-│ 2  │ Call dentist       │                      │ pending   │
-└────┴────────────────────┴──────────────────────┴───────────┘
-
-Total: 2 tasks (2 pending, 0 completed)
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8): 5
-Enter task ID: 1
-
-✓ Task 1 marked as completed!
-
-  Title: Buy groceries
-  Status: completed
-
-══════════════════════════════════════════════════════
-MAIN MENU
-══════════════════════════════════════════════════════
-1. Add Task          - Create a new task
-2. List Tasks        - View all tasks
-3. Update Task       - Modify an existing task
-4. Delete Task       - Remove a task
-5. Complete Task     - Mark task as completed
-6. Uncomplete Task   - Mark task as pending
-7. Help              - Show detailed help
-8. Exit              - Quit the application
-══════════════════════════════════════════════════════
-
-Select an option (1-8): 8
-
-╔════════════════════════════════════════════════════╗
-║          Thanks for using Todo CLI!                ║
-╚════════════════════════════════════════════════════╝
-
-All data has been cleared from memory.
-Goodbye!
+git clone <repository-url>
+cd todo-cli-phase1
 ```
+
+**2. Install Dependencies:**
+```bash
+# Install both frontend and backend dependencies
+npm run setup
+
+# Or install separately:
+npm run install:frontend  # Frontend only
+npm run install:backend   # Backend only
+```
+
+**3. Configure Environment Variables:**
+
+See [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) for comprehensive guide.
+
+**Quick Setup:**
+```bash
+# Generate shared secret
+openssl rand -base64 32
+
+# Backend (.env)
+cp backend/.env.example backend/.env
+# Edit backend/.env:
+# - Add generated secret to BETTER_AUTH_SECRET
+# - Use SQLite for local dev: DATABASE_URL=sqlite:///./test.db
+
+# Frontend (.env.local)
+cp frontend/.env.local.example frontend/.env.local
+# Edit frontend/.env.local:
+# - Add same secret to BETTER_AUTH_SECRET
+# - Use SQLite for local dev: DATABASE_URL=sqlite://./auth.db
+```
+
+**4. Start Development Servers:**
+```bash
+# Terminal 1 - Backend (http://localhost:8000)
+npm run dev:backend
+
+# Terminal 2 - Frontend (http://localhost:3000)
+npm run dev:frontend
+```
+
+**5. Access Application:**
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:8000
+- **API Documentation:** http://localhost:8000/docs (Swagger UI)
 
 ---
 
-## Error Handling Examples
+## Deployment
 
-The application provides helpful error messages with clear guidance:
+### Production Deployment Guide
 
+**Prerequisites:**
+- Neon PostgreSQL database (free tier available)
+- Vercel account (free tier available)
+- Backend hosting (Render, Railway, or Fly.io)
+
+### Step 1: Neon Database Setup
+
+1. Create account at [neon.tech](https://neon.tech)
+2. Create new project
+3. Copy connection string (format: `postgresql://user:password@host.neon.tech/neondb?sslmode=require`)
+4. Save for later use
+
+### Step 2: Backend Deployment (Render/Railway)
+
+**Using Render:**
+
+1. Create new Web Service
+2. Connect GitHub repository
+3. Configure build:
+   ```bash
+   Build Command: pip install -e .
+   Start Command: python -m app.main
+   ```
+4. Set environment variables:
+   ```bash
+   DATABASE_URL=<neon-connection-string>
+   BETTER_AUTH_SECRET=<production-secret>
+   CORS_ORIGINS=["https://yourdomain.vercel.app"]
+   DEBUG=false
+   ```
+5. Deploy and note the backend URL
+
+**Run Migrations:**
 ```bash
-# Empty task title (menu-driven)
-Select an option (1-8): 1
-Enter task title:
-Enter task description (optional): Test
-
-✗ Error: Title is required
-  Use: add <title> [description]
-
-# Invalid task ID (menu-driven)
-Select an option (1-8): 4
-Enter task ID: abc
-
-✗ Error: Invalid task ID 'abc'
-  Task ID must be a number
-
-# Task not found
-Select an option (1-8): 3
-Enter task ID: 999
-
-✗ Error: Task with ID 999 not found
-  Use 'list' to see available tasks
-
-# Unknown command (power user mode)
-Select an option (1-8): invalidcommand
-
-✗ Error: Unknown command 'invalidcommand'
-
-Available commands: add, complete, delete, help, list, uncomplete, update
-Type 'help' for more information
-
-# Missing update fields (menu-driven)
-Select an option (1-8): 3
-Enter task ID: 1
-
-What would you like to update?
-1. Title only
-2. Description only
-3. Both title and description
-Select option (1-3): 1
-Enter new title:
-
-✗ Error: Title cannot be empty when updating
+# Locally, pointing to production database
+export DATABASE_URL=<neon-connection-string>
+cd backend
+alembic upgrade head
 ```
+
+### Step 3: Frontend Deployment (Vercel)
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Deploy:
+   ```bash
+   cd frontend
+   vercel
+   ```
+3. Set environment variables in Vercel dashboard:
+   ```bash
+   NEXT_PUBLIC_API_URL=<backend-url-from-step-2>
+   BETTER_AUTH_SECRET=<same-as-backend-secret>
+   BETTER_AUTH_URL=<your-vercel-url>
+   DATABASE_URL=<neon-connection-string>
+   ```
+4. Redeploy to apply variables
+
+### Step 4: Verification
+
+1. Visit your Vercel URL
+2. Register a new user
+3. Create a task
+4. Verify data persists after refresh
+5. Test logout and login
+
+**Troubleshooting:** See [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) Troubleshooting section.
+
+---
+
+## Documentation
+
+### Core Documentation
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [README.md](README.md) | This file - Project overview | Everyone |
+| [README_PHASE2.md](README_PHASE2.md) | Phase II detailed documentation | Developers |
+| [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) | Environment variables guide | DevOps/Developers |
+| [CONSTITUTION_PHASE2.md](CONSTITUTION_PHASE2.md) | Architectural rules and constraints | Developers/Architects |
+| [CLAUDE_PHASE2.md](CLAUDE_PHASE2.md) | AI-assisted development guide | AI/Developers |
+
+### Integration Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [CHUNK6_INTEGRATION_COMPLETE.md](CHUNK6_INTEGRATION_COMPLETE.md) | Integration architecture and testing guide |
+| [CHUNK6_VALIDATION_CHECKLIST.md](CHUNK6_VALIDATION_CHECKLIST.md) | Comprehensive validation verification |
+
+### API Documentation
+
+- **Swagger UI:** http://localhost:8000/docs (when backend is running)
+- **Specification:** [specs/api/rest-endpoints.md](specs/api/rest-endpoints.md)
+
+### Database Documentation
+
+- **Schema Specification:** [specs/database/schema.md](specs/database/schema.md)
+- **Migrations:** `backend/alembic/versions/`
+
+---
+
+## Development Approach
+
+### Spec-Kit Plus Methodology
+
+This project was built using **Spec-Kit Plus**, a specification-driven development methodology with AI assistance:
+
+**Process:**
+1. **Specifications First** — Write detailed specs before any code
+2. **AI Code Generation** — Use Claude Code to generate code from specs
+3. **Zero Manual Coding** — All code generated from specifications
+4. **Iterative Refinement** — Update specs and regenerate as needed
+
+**Benefits:**
+- ✅ **Consistent Quality** — All code follows same patterns
+- ✅ **Complete Documentation** — Specs serve as documentation
+- ✅ **Rapid Development** — Generate complete features in minutes
+- ✅ **Easy Maintenance** — Update specs, regenerate code
+
+**AI Tool:** [Claude Code](https://claude.ai/claude-code) (Anthropic)
+**Methodology:** Spec-Kit Plus
+**Code Generated:** 100% (0 lines manually written)
+
+### Architecture Principles
+
+**Clean Architecture:**
+- Dependencies point inward (Presentation → Application → Domain)
+- Domain layer is framework-agnostic and self-contained
+- Use cases orchestrate business logic
+- Infrastructure implements interfaces defined by inner layers
+
+**Phase II Constraints:**
+- ✅ Phase I domain and application layers UNCHANGED
+- ✅ Only infrastructure and presentation layers modified
+- ✅ New features implemented through new infrastructure/presentation code
+- ✅ Clean Architecture principles maintained throughout
 
 ---
 
 ## Contributing
 
-This is an educational project demonstrating Clean Architecture principles. Contributions are welcome!
+This is a demonstration project for spec-driven development and Clean Architecture. Contributions should:
 
-### Guidelines
+1. Update specifications first (in `specs/`)
+2. Generate code using AI tools (Claude Code recommended)
+3. Maintain Clean Architecture layer separation
+4. Ensure all tests pass
+5. Update documentation
 
-1. Follow the existing architecture patterns
-2. Maintain beginner-friendly code
-3. Add docstrings to all public methods
-4. Keep it simple (no unnecessary complexity)
-5. Test your changes manually
-
-### Running Tests
-
-Tests will be added in future phases. For now, manually test all commands.
+**Before Contributing:**
+- Read [CONSTITUTION_PHASE2.md](CONSTITUTION_PHASE2.md) for architectural rules
+- Review [CLAUDE_PHASE2.md](CLAUDE_PHASE2.md) for AI development workflow
+- Check specifications in `specs/` directory
 
 ---
 
 ## License
 
-MIT License - Feel free to use this project for learning and educational purposes.
+MIT License - See LICENSE file for details
 
 ---
 
 ## Acknowledgments
 
-- Built following Clean Architecture principles by Robert C. Martin
-- Designed for hackathon demonstration and educational purposes
-- Created with ❤️ for the developer community
+- **Claude Code** — AI-powered development assistant by Anthropic
+- **Spec-Kit Plus** — Specification-driven development methodology
+- **Clean Architecture** — Robert C. Martin (Uncle Bob)
+- **Better Auth** — Modern authentication library for Next.js
+- **Neon** — Serverless PostgreSQL platform
 
 ---
 
-## Questions or Feedback?
+## Project Status
 
-For questions, suggestions, or feedback, please open an issue in the repository.
+- ✅ **Phase I:** Complete (CLI application)
+- ✅ **Phase II:** Complete (Web application with multi-user support)
+- 🚀 **Production:** Ready for deployment
 
-**Happy Task Managing!** 🎯
+**Last Updated:** January 7, 2026
+**Version:** 2.0.0
+**Built With:** Claude Code (Spec-Kit Plus)
+
+---
+
+**Questions or Issues?**
+- Review documentation in `/specs/` directory
+- Check troubleshooting in [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md)
+- Refer to integration guide in [CHUNK6_INTEGRATION_COMPLETE.md](CHUNK6_INTEGRATION_COMPLETE.md)

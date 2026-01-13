@@ -1,0 +1,40 @@
+# Spec-Kit Plus Configuration
+# Phase II: Full-Stack Web Application
+
+project:
+  name: "Todo App - Phase II"
+  version: "2.0.0"
+  methodology: "Spec-Kit Plus"
+  phase: "Phase II"
+
+specs:
+  directory: "specs/"
+  format: "markdown"
+  strict_mode: true  # Enforce 100% spec coverage
+
+generation:
+  ai_tool: "Claude Code"
+  model: "Claude Sonnet 4.5"
+  approach: "specification-driven"
+  human_coding: false  # No manual coding allowed
+
+architecture:
+  style: "Clean Architecture"
+  layers:
+    - "domain"
+    - "application"
+    - "infrastructure"
+    - "presentation"
+
+  pattern: "dependency_inversion"
+  preservation: "phase_i_unchanged"  # Domain and Application from Phase I
+
+validation:
+  traceability_required: true
+  spec_first: true
+  code_review: true
+
+session_tracking:
+  enabled: true
+  directory: "history/sessions/"
+  format: "markdown"
