@@ -63,5 +63,10 @@ export default function StaggerChildren({
   );
 }
 
-export const StaggerItem = motion.div;
-StaggerItem.defaultProps = { variants: item };
+export function StaggerItem({ children, className }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <motion.div variants={item} className={className}>
+      {children}
+    </motion.div>
+  );
+}

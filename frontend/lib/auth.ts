@@ -116,7 +116,7 @@ export async function signUp(data: SignUpData): Promise<Session> {
     throw new Error(result.error.message || "Registration failed");
   }
 
-  return result.data as Session;
+  return result.data as unknown as Session;
 }
 
 /**
@@ -136,7 +136,7 @@ export async function signIn(data: SignInData): Promise<Session> {
     throw new Error(result.error.message || "Login failed");
   }
 
-  return result.data as Session;
+  return result.data as unknown as Session;
 }
 
 /**

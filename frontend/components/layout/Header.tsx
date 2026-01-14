@@ -64,16 +64,18 @@ export default function Header() {
   }
 
   // Navigation links
-  const publicLinks = [
+  type NavLink = { href: string; label: string; isAnchor?: boolean };
+
+  const publicLinks: NavLink[] = [
     { href: "/", label: "Home" },
     { href: "/#features", label: "Features", isAnchor: true },
   ];
 
-  const protectedLinks = isAuthenticated
+  const protectedLinks: NavLink[] = isAuthenticated
     ? [{ href: "/tasks", label: "Tasks" }]
     : [];
 
-  const allLinks = [...publicLinks, ...protectedLinks];
+  const allLinks: NavLink[] = [...publicLinks, ...protectedLinks];
 
   // Check if link is active
   function isActiveLink(href: string): boolean {
