@@ -45,5 +45,7 @@ export const auth = betterAuth({
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:3002",
-  ],
+    "https://todo-spec-driven-development-fronte.vercel.app",
+    process.env.BETTER_AUTH_URL || "",
+  ].filter(Boolean),
 });
