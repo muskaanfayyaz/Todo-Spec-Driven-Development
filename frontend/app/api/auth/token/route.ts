@@ -26,8 +26,10 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get session token from cookie
-    const sessionToken = request.cookies.get("better-auth.session_token")?.value;
+    // Get session token from cookie (check both regular and secure cookie names)
+    const sessionToken =
+      request.cookies.get("better-auth.session_token")?.value ||
+      request.cookies.get("__Secure-better-auth.session_token")?.value;
 
     if (!sessionToken) {
       return NextResponse.json(
