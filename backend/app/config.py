@@ -25,7 +25,12 @@ class Settings(BaseSettings):
     jwt_expiration_hours: int = 1
 
     # CORS
-    cors_origins: list[str] = ["http://localhost:3000"]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+        "https://todo-spec-driven-development-fronte.vercel.app",
+    ]
 
     class Config:
         env_file = ".env"
