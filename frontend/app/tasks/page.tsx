@@ -8,7 +8,6 @@
  */
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getSession, signOut } from "@/lib/auth";
 import { api } from "@/lib/api-client";
 import AddTaskForm from "@/components/tasks/AddTaskForm";
@@ -25,7 +24,6 @@ interface Task {
 }
 
 export default function TasksPage() {
-  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,14 +33,18 @@ export default function TasksPage() {
 
   // Load session and tasks on mount
   useEffect(() => {
+    let isMounted = true;
+
     async function loadData() {
       try {
         // EXPLICIT AUTHENTICATION CHECK - Must have valid session
         const session = await getSession();
 
+        if (!isMounted) return;
+
         if (!session || !session.user || !session.user.id) {
           console.error("[Tasks Page] No valid session found - redirecting to login");
-          router.push("/login");
+          window.location.href = "/login";
           return;
         }
 
@@ -55,33 +57,41 @@ export default function TasksPage() {
         const tasksData = await api.get<Task[]>(
           `/api/${session.user.id}/tasks`
         );
+
+        if (!isMounted) return;
+
         console.log("[Tasks Page] Tasks loaded:", tasksData.length);
         setTasks(tasksData);
       } catch (err: any) {
+        if (!isMounted) return;
+
         console.error("[Tasks Page] Error loading tasks:", err);
 
-        // Handle authentication errors explicitly
-        if (err.statusCode === 401) {
-          console.error("[Tasks Page] Authentication failed - redirecting to login");
-          router.push("/login");
-          return;
-        }
-
+        // Don't redirect on API errors - just show error state
+        // This prevents infinite loop when backend is unreachable
         setError(err.message || "Failed to load tasks. Please try again.");
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadData();
-  }, [router]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   async function handleLogout() {
     try {
       await signOut();
-      router.push("/login");
+      window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed:", err);
+      // Force redirect even if signOut fails
+      window.location.href = "/login";
     }
   }
 
