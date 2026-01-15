@@ -60,10 +60,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // If accessing login/register with valid token → redirect to tasks
-  if (isPublicAuthRoute && token) {
-    return NextResponse.redirect(new URL("/tasks", request.url));
-  }
+  // REMOVED: Auto-redirect from login to tasks when token exists
+  // This was causing infinite loops when the session was invalid but cookie existed
+  // Let the login page handle its own redirect after successful auth
 
   // Allow request to proceed
   return NextResponse.next();
