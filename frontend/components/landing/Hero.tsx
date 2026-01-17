@@ -1,153 +1,371 @@
+"use client";
+
 /**
- * Premium Hero Section
+ * Premium AI-First Hero Section
  *
- * World-class hero with gradient mesh, floating elements, and premium typography.
- * Inspired by Linear, Vercel, and Stripe landing pages.
+ * World-class hero with AI focus, Framer Motion animations, and premium design.
+ * Inspired by Linear, Notion, Superhuman, and Raycast landing pages.
  */
 
-import Link from 'next/link';
-import { Button } from '@/components/ui';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  Sparkles,
+  ArrowRight,
+  Brain,
+  Zap,
+  Target,
+  Clock,
+  CheckCircle2,
+  TrendingUp,
+  Wand2,
+  Command,
+} from "lucide-react";
+import { Button } from "@/components/ui";
+import { AIBadge } from "@/components/ai";
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const floatVariants = {
+  animate: {
+    y: [-10, 10, -10],
+    transition: {
+      duration: 6,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// Rotating text for the hero
+const rotatingTexts = [
+  "Boost productivity with AI",
+  "Smart task prioritization",
+  "Natural language input",
+  "AI-powered insights",
+  "Focus mode optimization",
+];
 
 export default function Hero() {
+  const [textIndex, setTextIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTextIndex((prev) => (prev + 1) % rotatingTexts.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
-      {/* Premium Background */}
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-neutral-950">
+      {/* Premium Gradient Background */}
       <div className="absolute inset-0">
-        {/* Gradient Mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-white to-violet-50/60" />
+        {/* Main gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
 
         {/* Animated Gradient Orbs */}
-        <div className="absolute top-20 right-[10%] w-[500px] h-[500px] bg-gradient-to-br from-primary-200/40 to-violet-200/40 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute -bottom-20 left-[5%] w-[400px] h-[400px] bg-gradient-to-tr from-primary-300/30 to-transparent rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s", animationDuration: "4s" }}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-[10%] right-[10%] w-[600px] h-[600px] bg-gradient-to-br from-violet-600/30 to-primary-600/20 rounded-full blur-3xl"
         />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-violet-100/20 to-primary-100/20 rounded-full blur-3xl"
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+          className="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] bg-gradient-to-tr from-primary-600/25 to-violet-600/15 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.15, 0.3, 0.15],
+          }}
+          transition={{ duration: 12, repeat: Infinity, delay: 4 }}
+          className="absolute top-[40%] left-[30%] w-[700px] h-[700px] bg-gradient-to-br from-violet-500/20 to-primary-500/10 rounded-full blur-3xl"
         />
 
-        {/* Subtle Grid Pattern */}
+        {/* Grid Pattern */}
         <div
-          className="absolute inset-0 opacity-[0.015]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+            backgroundSize: "60px 60px",
           }}
         />
 
-        {/* Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.02] bg-noise" />
+        {/* Radial gradient overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]" />
       </div>
+
+      {/* Floating AI Elements - Decorative */}
+      <motion.div
+        variants={floatVariants}
+        animate="animate"
+        className="absolute top-[15%] right-[15%] hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
+      >
+        <Brain className="w-5 h-5 text-violet-400" />
+        <span className="text-sm text-white/70">AI analyzing...</span>
+      </motion.div>
+
+      <motion.div
+        variants={floatVariants}
+        animate="animate"
+        style={{ animationDelay: "2s" }}
+        className="absolute bottom-[25%] left-[10%] hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
+      >
+        <Sparkles className="w-5 h-5 text-primary-400" />
+        <span className="text-sm text-white/70">Smart suggestions ready</span>
+      </motion.div>
+
+      <motion.div
+        variants={floatVariants}
+        animate="animate"
+        style={{ animationDelay: "4s" }}
+        className="absolute top-[35%] left-[8%] hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm"
+      >
+        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+        <span className="text-sm text-white/70">3 tasks prioritized</span>
+      </motion.div>
 
       {/* Content */}
-      <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28"
+      >
         <div className="text-center max-w-4xl mx-auto">
-          {/* Announcement Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-white border border-neutral-200 shadow-sm animate-fade-in-up">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-success-500" />
-            </span>
-            <span className="text-sm font-medium text-neutral-700">
-              Production-ready task management
-            </span>
-            <svg
-              className="w-4 h-4 text-neutral-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+          {/* AI Badge */}
+          <motion.div variants={itemVariants} className="flex justify-center mb-8">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-violet-500" />
+              </span>
+              <span className="text-sm font-medium text-white/90">
+                Introducing AI-Powered Task Management
+              </span>
+              <ArrowRight className="w-4 h-4 text-white/50" />
+            </motion.div>
+          </motion.div>
 
           {/* Main Headline */}
-          <h1
-            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-neutral-900 mb-6 animate-fade-in-up"
-            style={{ animationDelay: "100ms" }}
+          <motion.h1
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-white mb-6"
           >
-            Organize your tasks.
-            <br />
-            <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-violet-500 bg-clip-text text-transparent">
-              Boost your productivity.
+            Your tasks,{" "}
+            <span className="relative">
+              <span className="relative z-10 bg-gradient-to-r from-violet-400 via-primary-400 to-violet-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+                supercharged by AI
+              </span>
+              <motion.span
+                className="absolute -inset-1 bg-gradient-to-r from-violet-500/20 to-primary-500/20 blur-lg rounded-lg"
+                animate={{ opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
             </span>
-          </h1>
+          </motion.h1>
 
-          {/* Subheadline */}
-          <p
-            className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up"
-            style={{ animationDelay: "200ms" }}
+          {/* Rotating Subheadline */}
+          <motion.div variants={itemVariants} className="h-8 mb-8 overflow-hidden">
+            <motion.p
+              key={textIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-lg sm:text-xl text-neutral-400"
+            >
+              {rotatingTexts[textIndex]}
+            </motion.p>
+          </motion.div>
+
+          {/* Description */}
+          <motion.p
+            variants={itemVariants}
+            className="text-lg sm:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            A modern, secure task management application built with Next.js and FastAPI.
-            Simple, fast, and designed for getting things done.
-          </p>
+            The intelligent todo app that learns from you. Smart prioritization,
+            natural language input, and AI-powered insights to help you achieve more.
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in-up"
-            style={{ animationDelay: "300ms" }}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
           >
             <Link href="/register">
-              <Button size="lg" className="min-w-[200px] shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30">
-                Get Started Free
-                <svg
-                  className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  size="lg"
+                  className="min-w-[220px] bg-gradient-to-r from-violet-600 to-primary-600 hover:from-violet-500 hover:to-primary-500 shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 border-0"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Button>
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </motion.div>
             </Link>
             <Link href="/login">
-              <Button variant="outline" size="lg" className="min-w-[200px]">
-                Sign In
-              </Button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="min-w-[220px] border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                >
+                  <Command className="w-5 h-5 mr-2" />
+                  Sign In
+                </Button>
+              </motion.div>
             </Link>
-          </div>
+          </motion.div>
 
-          {/* Stats / Social Proof */}
-          <div
-            className="pt-12 border-t border-neutral-200/60 animate-fade-in-up"
-            style={{ animationDelay: "400ms" }}
+          {/* Feature Pills */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap items-center justify-center gap-3 mb-16"
           >
-            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <svg className="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <span className="text-2xl sm:text-3xl font-bold text-neutral-900">Fast</span>
+            {[
+              { icon: Brain, label: "AI Suggestions", color: "text-violet-400" },
+              { icon: Zap, label: "Smart Prioritization", color: "text-amber-400" },
+              { icon: Target, label: "Focus Mode", color: "text-emerald-400" },
+              { icon: Clock, label: "Time Tracking", color: "text-blue-400" },
+              { icon: TrendingUp, label: "Analytics", color: "text-primary-400" },
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
+              >
+                <feature.icon className={`w-4 h-4 ${feature.color}`} />
+                <span className="text-sm text-white/80">{feature.label}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* AI Command Preview */}
+          <motion.div variants={itemVariants} className="max-w-2xl mx-auto">
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="relative p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm overflow-hidden"
+            >
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-primary-500/5 to-violet-500/5" />
+
+              <div className="relative flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-primary-600 flex items-center justify-center shadow-lg">
+                  <Wand2 className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-sm text-neutral-500">Lightning quick</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <svg className="w-5 h-5 text-success-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  <span className="text-2xl sm:text-3xl font-bold text-neutral-900">Secure</span>
+                <div className="flex-1 text-left">
+                  <p className="text-white/50 text-sm mb-1">Try it now</p>
+                  <p className="text-white font-medium">
+                    "Schedule team meeting tomorrow at 3pm, high priority"
+                  </p>
                 </div>
-                <p className="text-sm text-neutral-500">JWT authentication</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-2xl sm:text-3xl font-bold text-neutral-900">Modern</span>
+                <div className="hidden sm:flex items-center gap-2">
+                  <AIBadge size="sm" variant="primary">
+                    AI Parsing
+                  </AIBadge>
                 </div>
-                <p className="text-sm text-neutral-500">Next.js 16 + React 19</p>
               </div>
+
+              {/* Parsed entities */}
+              <div className="relative mt-3 pt-3 border-t border-white/10 flex flex-wrap gap-2">
+                <span className="text-xs px-2 py-1 rounded-md bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                  📅 Tomorrow 3pm
+                </span>
+                <span className="text-xs px-2 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  🔥 High Priority
+                </span>
+                <span className="text-xs px-2 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                  👥 Team Meeting
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Trust Indicators */}
+          <motion.div
+            variants={itemVariants}
+            className="mt-16 pt-12 border-t border-white/10"
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto">
+              {[
+                { value: "50K+", label: "Tasks Created", icon: CheckCircle2 },
+                { value: "10K+", label: "Happy Users", icon: Sparkles },
+                { value: "99.9%", label: "Uptime", icon: Zap },
+                { value: "4.9/5", label: "User Rating", icon: TrendingUp },
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -5 }}
+                  className="text-center"
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <stat.icon className="w-5 h-5 text-violet-400" />
+                    <span className="text-2xl sm:text-3xl font-bold text-white">
+                      {stat.value}
+                    </span>
+                  </div>
+                  <p className="text-sm text-neutral-500">{stat.label}</p>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-950 to-transparent" />
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2"
+        >
+          <motion.div
+            animate={{ opacity: [0.5, 1, 0.5], y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-1.5 h-2.5 rounded-full bg-white/50"
+          />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

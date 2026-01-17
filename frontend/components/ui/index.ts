@@ -25,6 +25,10 @@ export {
 } from './Card';
 export type { CardProps, StatCardProps } from './Card';
 
+// Switch
+export { default as Switch } from './Switch';
+export type { SwitchProps } from './Switch';
+
 // State Components
 export { default as EmptyState } from './EmptyState';
 export { default as LoadingState } from './LoadingState';
