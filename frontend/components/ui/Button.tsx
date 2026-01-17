@@ -196,13 +196,13 @@ Button.displayName = 'Button';
 export default Button;
 
 // Icon Button variant for icon-only buttons
-export interface IconButtonProps extends Omit<ButtonProps, 'leftIcon' | 'rightIcon' | 'children'> {
-  icon: React.ReactNode;
+export interface IconButtonProps extends Omit<ButtonProps, 'leftIcon' | 'rightIcon'> {
+  icon?: React.ReactNode;
   'aria-label': string;
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, size = 'md', className, ...props }, ref) => {
+  ({ icon, size = 'md', className, children, ...props }, ref) => {
     const iconButtonSizes = {
       xs: 'h-7 w-7',
       sm: 'h-8 w-8',
@@ -218,7 +218,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         className={cn(iconButtonSizes[size], 'px-0', className)}
         {...props}
       >
-        {icon}
+        {icon || children}
       </Button>
     );
   }
