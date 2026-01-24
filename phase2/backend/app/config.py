@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     # CORS - Additional origins from environment (optional)
     cors_origins_extra: str = ""
 
+    # Phase III: AI Chatbot (optional, only needed if using chatbot)
+    gemini_api_key: str = ""
+
     @property
     def cors_origins(self) -> list[str]:
         """Get all CORS origins including defaults and extras from env."""
@@ -57,6 +60,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra env vars not defined in Settings
 
 
 @lru_cache()

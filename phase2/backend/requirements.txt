@@ -20,3 +20,7 @@ PyJWT>=2.8.0
 
 # Production Server
 gunicorn>=21.2.0
+
+# Phase III: AI Chatbot Dependencies
+google-generativeai>=0.8.0
+mcp>=1.0.0

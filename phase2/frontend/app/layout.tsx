@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/layout";
 import { Providers } from "@/components/providers";
 import { themeScript } from "@/components/theme";
+import { ChatWrapper } from "@/components/chat/ChatWrapper";
 
 export const metadata: Metadata = {
   title: "TodoAI - AI-Powered Task Management",
@@ -21,10 +22,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="antialiased min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
+      <body className="antialiased min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300" suppressHydrationWarning>
         <Providers>
           <Header />
           <main>{children}</main>
+          {/* Phase III: AI Chatbot Widget */}
+          <ChatWrapper />
         </Providers>
       </body>
     </html>
