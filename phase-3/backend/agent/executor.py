@@ -252,9 +252,9 @@ class AgentExecutor:
             if msg["role"] == "system":
                 continue  # System prompt handled separately
             elif msg["role"] == "user":
-                contents.append(types.Content(role="user", parts=[types.Part.from_text(msg["content"])]))
+                contents.append(types.Content(role="user", parts=[types.Part(text=msg["content"])]))
             elif msg["role"] == "assistant":
-                contents.append(types.Content(role="model", parts=[types.Part.from_text(msg["content"])]))
+                contents.append(types.Content(role="model", parts=[types.Part(text=msg["content"])]))
 
         # Create config with system instruction
         config = types.GenerateContentConfig(
