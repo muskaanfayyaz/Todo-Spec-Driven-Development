@@ -18,6 +18,11 @@ _phase2_path = Path(__file__).parent.parent.parent.parent / "phase2" / "backend"
 if str(_phase2_path) not in sys.path:
     sys.path.insert(0, str(_phase2_path))
 
+# Add phase3 backend to path for absolute imports (e.g., "from agent import ...")
+_phase3_backend_path = Path(__file__).parent.parent
+if str(_phase3_backend_path) not in sys.path:
+    sys.path.insert(0, str(_phase3_backend_path))
+
 # Phase II app import (existing FastAPI application)
 from app.main import app
 
