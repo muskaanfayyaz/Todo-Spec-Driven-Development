@@ -96,6 +96,43 @@ python -m app.main
 
 ---
 
+## Phase 3: AI-Powered Chat Assistant
+
+**Location:** `/phase-3`
+
+Extends the Phase 2 application with a powerful, conversational AI assistant for managing tasks. The chatbot is integrated directly into the web UI.
+
+### Tech Stack
+- **AI:** Google Gemini (`gemini-2.0-flash`)
+- **Backend:** The existing Phase 2 FastAPI app is extended with a new `/chat` endpoint. The core application logic is not replaced, only augmented.
+
+### Features
+- **Conversational Task Management:** Users can interact with the chatbot using natural language to manage their to-do list.
+- **Floating Chat Interface:** A non-intrusive chat panel is available on all authenticated pages.
+- **Supported Commands:**
+  - "Add a new task to buy groceries"
+  - "What are my pending tasks?"
+  - "Complete task number 15"
+  - "Show me everything"
+  - "Delete the grocery task"
+
+### Quick Start
+The Phase 3 backend is the new primary entry point for the entire application.
+
+```bash
+# From repository root, first install requirements
+pip install -r phase2/backend/requirements.txt
+
+# Run the backend (which now includes Phase 2 and 3)
+cd phase-3/backend
+uvicorn api.main:app --reload
+```
+
+### Documentation
+- `phase-3/specs/` - Specifications for the agent and chat API.
+
+---
+
 ## Development Approach
 
 This project follows **Spec-Kit Plus** methodology:
