@@ -47,19 +47,29 @@ _TOOL_FUNCTIONS: Dict[str, Any] = {
 }
 
 # Convert tool definitions to Gemini function declarations
+from google.generativeai.types import FunctionDeclaration, Schema, Type
+
+
 def _convert_to_gemini_tools():
-    """Convert tool definitions to Gemini format."""
-    declarations = []
-    for tool in TOOL_DEFINITIONS:
-        func = tool["function"]
-        declarations.append(
-            types.FunctionDeclaration(
+    gemini_tools = []
+
+    for func in MCP_FUNCTIONS:
+        gemini_tools.append(
+            FunctionDeclaration(
                 name=func["name"],
                 description=func["description"],
-                parameters=func["parameters"],
+                parameters=Schema(
+                    type=Type.OBJECT,
+                    properties={
+                        "title": Schema(type=Type.STRING),
+                        "description": Schema(type=Type.STRING),
+                    },
+                    required=["title"],
+                ),
             )
         )
-    return types.Tool(function_declarations=declarations)
+
+    return gemini_tools
 
 GEMINI_TOOLS = _convert_to_gemini_tools()
 
