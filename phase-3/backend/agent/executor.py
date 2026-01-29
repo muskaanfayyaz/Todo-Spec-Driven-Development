@@ -198,11 +198,14 @@ class AgentExecutor:
             candidate = response.candidates[0]
             content = candidate.content
 
-            if content is None or not content.parts:
-                return (
-                    "I’m here, but I didn’t get enough information to respond. Please rephrase.",
-                    tool_records,
-                )
+            if content is None:
+                logger.warning("Gemini returned null content, retrying...")
+                continue  # ⬅️ let loop retry
+
+            if not content.parts:
+                logger.warning("Gemini returned empty parts, retrying...")
+                continue  # ⬅️ THIS IS THE KEY FIX
+
 
             function_calls = []
             text_response = ""
