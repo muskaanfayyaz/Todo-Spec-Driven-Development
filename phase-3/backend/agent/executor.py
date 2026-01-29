@@ -1,5 +1,6 @@
 # T-332: Agent Executor
 # Spec: agent.spec.md Section 4
+# FIXED for Google Gemini v1beta (gemini-2.5-flash)
 
 import logging
 import os
@@ -45,27 +46,20 @@ _TOOL_FUNCTIONS: Dict[str, Any] = {
 
 
 def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
-    """Convert MCP tool definitions into Gemini FunctionDeclarations"""
+    """Convert TOOL_DEFINITIONS into Gemini FunctionDeclarations"""
     tools: List[FunctionDeclaration] = []
 
-    for i, tool in enumerate(TOOL_DEFINITIONS):
-        if not isinstance(tool, dict):
-            logger.warning(f"Skipping tool at index {i}: not a dict → {tool}")
+    for tool in TOOL_DEFINITIONS:
+        # Your config already matches this structure
+        fn = tool.get("function")
+        if not fn:
             continue
-
-        name = tool.get("name")
-        if not name:
-            logger.warning(f"Skipping tool at index {i}: missing 'name' → {tool}")
-            continue
-
-        description = tool.get("description", "")
-        parameters = tool.get("parameters", {})
 
         tools.append(
             FunctionDeclaration(
-                name=name,
-                description=description,
-                parameters=parameters,
+                name=fn["name"],
+                description=fn.get("description", ""),
+                parameters=fn.get("parameters", {}),
             )
         )
 
@@ -81,7 +75,7 @@ class AgentExecutor:
     Stateless agent executor.
 
     Lifecycle:
-    HYDRATE → APPEND → INVOKE → PERSIST → DEHYDRATE
+    HYDRATE → APPEND → INVOKE → PERSIST
     """
 
     def __init__(self, session: Session, user_id: str):
@@ -143,7 +137,9 @@ class AgentExecutor:
         ]
 
         for msg in history[-MAX_HISTORY_MESSAGES:]:
-            messages.append({"role": msg.role, "content": msg.content})
+            messages.append(
+                {"role": msg.role, "content": msg.content}
+            )
 
         return conversation_id, messages
 
@@ -172,10 +168,9 @@ class AgentExecutor:
         tool_records: List[ToolCallRecord] = []
         contents: List[types.Content] = []
 
+        # ✅ CRITICAL FIX: system prompt MUST be injected
         for msg in messages:
-            if msg["role"] == "system":
-                continue
-            role = "user" if msg["role"] == "user" else "model"
+            role = "user" if msg["role"] in ("system", "user") else "model"
             contents.append(
                 types.Content(
                     role=role,
@@ -186,7 +181,7 @@ class AgentExecutor:
         config = types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
             temperature=AGENT_CONFIG.get("temperature", 0.7),
-            max_output_tokens=AGENT_CONFIG.get("max_tokens", 512),
+            max_output_tokens=AGENT_CONFIG.get("max_tokens", 1024),
             tools=GEMINI_TOOLS,
         )
 
@@ -197,7 +192,6 @@ class AgentExecutor:
                 config=config,
             )
 
-            # ---- SAFETY CHECKS (CRITICAL FIX) ----
             if not response.candidates:
                 return "I didn’t receive a response. Please try again.", tool_records
 
@@ -209,7 +203,6 @@ class AgentExecutor:
                     "I’m here, but I didn’t get enough information to respond. Please rephrase.",
                     tool_records,
                 )
-            # -------------------------------------
 
             function_calls = []
             text_response = ""
@@ -220,15 +213,18 @@ class AgentExecutor:
                 elif part.text:
                     text_response += part.text
 
+            # ✅ Normal text response
             if not function_calls:
                 return text_response.strip(), tool_records
 
+            # ✅ Tool chaining
             contents.append(content)
 
-            response_parts = []
+            response_parts: List[types.Part] = []
             for call in function_calls:
                 result, record = await self._execute_tool(
-                    call.name, dict(call.args or {})
+                    call.name,
+                    dict(call.args or {}),
                 )
                 tool_records.append(record)
 
