@@ -7,7 +7,7 @@
 # Agent Configuration
 AGENT_CONFIG = {
     "name": "TodoAssistant",
-    "model": "gemini-3-flash",  # Google Gemini model
+    "model": "gemini-2.5-flash",  # Google Gemini model
     "temperature": 0.7,
     "max_tokens": 1024,
 }
