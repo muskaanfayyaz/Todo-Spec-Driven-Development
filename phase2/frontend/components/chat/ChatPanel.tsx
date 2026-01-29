@@ -54,7 +54,7 @@ export function ChatPanel({ userId, getToken }: ChatPanelProps) {
       {/* Floating toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${
+        className={`fixed bottom-6 right-6 z-[999] w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 ${
           isOpen
             ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 rotate-0"
             : "bg-primary-500 hover:bg-primary-600 text-white hover:scale-105"
@@ -81,7 +81,7 @@ export function ChatPanel({ userId, getToken }: ChatPanelProps) {
 
       {/* Chat panel */}
       <div
-        className={`fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300 ${
+        className={`fixed bottom-24 right-6 z-[999] w-96 max-w-[calc(100vw-3rem)] bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 overflow-hidden transition-all duration-300 ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
