@@ -52,21 +52,12 @@ def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
         if not isinstance(tool, dict):
             logger.warning(f"Skipping invalid tool at index {i}: not a dict")
             continue
-        if "name" not in tool:
-            logger.warning(f"Skipping tool at index {i}: missing 'name' key")
-            continue
-        if "description" not in tool:
-            logger.warning(f"Tool '{tool['name']}' missing 'description'; defaulting to empty string")
-            tool["description"] = ""
-        if "parameters" not in tool:
-            logger.warning(f"Tool '{tool['name']}' missing 'parameters'; defaulting to empty dict")
-            tool["parameters"] = {}
 
         tools.append(
             FunctionDeclaration(
                 name=tool["name"],
-                description=tool["description"],
-                parameters=tool["parameters"],
+                description=tool.get("description", ""),
+                parameters=tool.get("parameters", {}),
             )
         )
 
@@ -90,7 +81,7 @@ class AgentExecutor:
         self._user_id = user_id
         self._conversation_repo = ConversationRepository(session, user_id)
         self._message_repo = MessageRepository(session, user_id)
-        self._model_name = AGENT_CONFIG.get("model", "default-model")
+        self._model_name = AGENT_CONFIG.get("model", "gemini-2.5-flash")
 
     async def execute(
         self,
@@ -144,9 +135,7 @@ class AgentExecutor:
         ]
 
         for msg in history[-MAX_HISTORY_MESSAGES:]:
-            messages.append(
-                {"role": msg.role, "content": msg.content}
-            )
+            messages.append({"role": msg.role, "content": msg.content})
 
         return conversation_id, messages
 
@@ -200,8 +189,19 @@ class AgentExecutor:
                 config=config,
             )
 
+            # ---- SAFETY CHECKS (CRITICAL FIX) ----
+            if not response.candidates:
+                return "I didn’t receive a response. Please try again.", tool_records
+
             candidate = response.candidates[0]
             content = candidate.content
+
+            if content is None or not content.parts:
+                return (
+                    "I’m here, but I didn’t get enough information to respond. Please rephrase.",
+                    tool_records,
+                )
+            # -------------------------------------
 
             function_calls = []
             text_response = ""
