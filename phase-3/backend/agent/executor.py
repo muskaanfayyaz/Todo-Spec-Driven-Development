@@ -26,7 +26,7 @@ from .config import (
 )
 from .result import AgentResult, ToolCallRecord
 from ..repositories.conversation_repository import ConversationRepository
-from repositories.message_repository import MessageRepository
+from ..repositories.message_repository import MessageRepository
 
 # Import MCP tools for execution
 from mcp_tools.tools import add_task, list_tasks, complete_task, delete_task, update_task
