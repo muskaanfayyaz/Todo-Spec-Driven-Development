@@ -24,4 +24,3 @@ gunicorn>=21.2.0
 # Phase III: AI Chatbot Dependencies
 google-genai==0.3.0
 mcp>=1.0.0
-google-generativeai>=0.3.2
