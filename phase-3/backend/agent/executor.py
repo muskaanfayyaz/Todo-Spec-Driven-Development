@@ -50,14 +50,22 @@ def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
 
     for i, tool in enumerate(TOOL_DEFINITIONS):
         if not isinstance(tool, dict):
-            logger.warning(f"Skipping invalid tool at index {i}: not a dict")
+            logger.warning(f"Skipping tool at index {i}: not a dict → {tool}")
             continue
+
+        name = tool.get("name")
+        if not name:
+            logger.warning(f"Skipping tool at index {i}: missing 'name' → {tool}")
+            continue
+
+        description = tool.get("description", "")
+        parameters = tool.get("parameters", {})
 
         tools.append(
             FunctionDeclaration(
-                name=tool["name"],
-                description=tool.get("description", ""),
-                parameters=tool.get("parameters", {}),
+                name=name,
+                description=description,
+                parameters=parameters,
             )
         )
 
