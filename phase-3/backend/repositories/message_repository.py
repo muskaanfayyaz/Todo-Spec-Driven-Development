@@ -8,7 +8,7 @@ from typing import Optional, List, Any
 
 from sqlmodel import Session, select
 
-from models.message import MessageDB
+from ..models.message import MessageDB
 
 
 class MessageRepository:
