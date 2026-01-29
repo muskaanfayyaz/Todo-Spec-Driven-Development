@@ -25,7 +25,7 @@ from .config import (
     MAX_HISTORY_MESSAGES,
 )
 from .result import AgentResult, ToolCallRecord
-from repositories.conversation_repository import ConversationRepository
+from ..repositories.conversation_repository import ConversationRepository
 from repositories.message_repository import MessageRepository
 
 # Import MCP tools for execution
