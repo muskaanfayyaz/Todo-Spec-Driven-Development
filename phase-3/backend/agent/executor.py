@@ -1,9 +1,10 @@
 # T-332: Agent Executor
-# Spec: agent.spec.md Section 4
-# FIXED for Google Gemini v1beta (gemini-2.5-flash)
+# FIXED + RATE-LIMIT SAFE
+# Recommended model: gemini-2.5-flash-lite
 
 import logging
 import os
+import asyncio
 from typing import Optional, List, Dict, Any, Tuple
 
 from google import genai
@@ -32,10 +33,8 @@ from ..mcp_tools.tools import (
 
 logger = logging.getLogger(__name__)
 
-# Gemini client
 _client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# Tool name → function map
 _TOOL_FUNCTIONS: Dict[str, Any] = {
     "add_task": add_task,
     "list_tasks": list_tasks,
@@ -46,11 +45,9 @@ _TOOL_FUNCTIONS: Dict[str, Any] = {
 
 
 def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
-    """Convert TOOL_DEFINITIONS into Gemini FunctionDeclarations"""
     tools: List[FunctionDeclaration] = []
 
     for tool in TOOL_DEFINITIONS:
-        # Your config already matches this structure
         fn = tool.get("function")
         if not fn:
             continue
@@ -63,7 +60,6 @@ def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
             )
         )
 
-    logger.info(f"Loaded {len(tools)} Gemini tools")
     return tools
 
 
@@ -71,19 +67,16 @@ GEMINI_TOOLS = _convert_to_gemini_tools()
 
 
 class AgentExecutor:
-    """
-    Stateless agent executor.
-
-    Lifecycle:
-    HYDRATE → APPEND → INVOKE → PERSIST
-    """
-
     def __init__(self, session: Session, user_id: str):
         self._session = session
         self._user_id = user_id
         self._conversation_repo = ConversationRepository(session, user_id)
         self._message_repo = MessageRepository(session, user_id)
-        self._model_name = AGENT_CONFIG.get("model", "gemini-2.5-flash")
+
+        # ✅ USE FLASH-LITE FOR CHATBOTS
+        self._model_name = AGENT_CONFIG.get(
+            "model", "gemini-2.5-flash-lite"
+        )
 
     async def execute(
         self,
@@ -125,21 +118,16 @@ class AgentExecutor:
             history = []
         else:
             conversation = self._conversation_repo.get_by_id(conversation_id)
-            if conversation is None:
-                conversation = self._conversation_repo.create()
-                conversation_id = conversation.id
-                history = []
-            else:
-                history = self._message_repo.get_history(conversation_id)
+            history = (
+                self._message_repo.get_history(conversation_id)
+                if conversation
+                else []
+            )
 
-        messages: List[Dict[str, Any]] = [
-            {"role": "system", "content": SYSTEM_PROMPT}
-        ]
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
         for msg in history[-MAX_HISTORY_MESSAGES:]:
-            messages.append(
-                {"role": msg.role, "content": msg.content}
-            )
+            messages.append({"role": msg.role, "content": msg.content})
 
         return conversation_id, messages
 
@@ -168,9 +156,8 @@ class AgentExecutor:
         tool_records: List[ToolCallRecord] = []
         contents: List[types.Content] = []
 
-        # ✅ CRITICAL FIX: system prompt MUST be injected
         for msg in messages:
-            role = "user" if msg["role"] in ("system", "user") else "model"
+            role = "user" if msg["role"] != "assistant" else "model"
             contents.append(
                 types.Content(
                     role=role,
@@ -180,32 +167,36 @@ class AgentExecutor:
 
         config = types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
-            temperature=AGENT_CONFIG.get("temperature", 0.7),
-            max_output_tokens=AGENT_CONFIG.get("max_tokens", 1024),
+            temperature=AGENT_CONFIG.get("temperature", 0.5),
+            max_output_tokens=AGENT_CONFIG.get("max_tokens", 512),
             tools=GEMINI_TOOLS,
         )
 
-        for _ in range(10):
-            response = _client.models.generate_content(
-                model=self._model_name,
-                contents=contents,
-                config=config,
-            )
+        backoff = 1.0
+
+        # ✅ LIMIT TOOL CHAINS (prevents RPM burn)
+        for _ in range(5):
+            try:
+                response = _client.models.generate_content(
+                    model=self._model_name,
+                    contents=contents,
+                    config=config,
+                )
+            except Exception as e:
+                # ✅ RATE LIMIT BACKOFF
+                if "429" in str(e):
+                    logger.warning("Rate limited. Backing off...")
+                    await asyncio.sleep(backoff)
+                    backoff = min(backoff * 2, 20)
+                    continue
+                raise
 
             if not response.candidates:
-                return "I didn’t receive a response. Please try again.", tool_records
+                return "No response received.", tool_records
 
-            candidate = response.candidates[0]
-            content = candidate.content
-
-            if content is None:
-                logger.warning("Gemini returned null content, retrying...")
-                continue  # ⬅️ let loop retry
-
-            if not content.parts:
-                logger.warning("Gemini returned empty parts, retrying...")
-                continue  # ⬅️ THIS IS THE KEY FIX
-
+            content = response.candidates[0].content
+            if not content or not content.parts:
+                return "I didn’t understand that. Please try again.", tool_records
 
             function_calls = []
             text_response = ""
@@ -216,18 +207,16 @@ class AgentExecutor:
                 elif part.text:
                     text_response += part.text
 
-            # ✅ Normal text response
             if not function_calls:
                 return text_response.strip(), tool_records
 
-            # ✅ Tool chaining
             contents.append(content)
 
             response_parts: List[types.Part] = []
+
             for call in function_calls:
                 result, record = await self._execute_tool(
-                    call.name,
-                    dict(call.args or {}),
+                    call.name, dict(call.args or {})
                 )
                 tool_records.append(record)
 
@@ -242,10 +231,7 @@ class AgentExecutor:
                 types.Content(role="user", parts=response_parts)
             )
 
-        return (
-            "I’ve completed several actions but had to stop. Please continue.",
-            tool_records,
-        )
+        return "I completed your request.", tool_records
 
     async def _execute_tool(
         self, tool_name: str, arguments: Dict[str, Any]
@@ -260,7 +246,7 @@ class AgentExecutor:
             try:
                 result = await tool(**arguments)
             except Exception:
-                logger.exception("Tool failed")
+                logger.exception("Tool execution failed")
                 result = {"error": "tool_execution_failed"}
 
         record = ToolCallRecord(
@@ -278,9 +264,8 @@ class AgentExecutor:
         tool_records: List[ToolCallRecord],
     ) -> None:
 
-        tool_calls = None
-        if tool_records:
-            tool_calls = [
+        tool_calls = (
+            [
                 {
                     "tool": r.tool,
                     "arguments": r.arguments,
@@ -288,6 +273,9 @@ class AgentExecutor:
                 }
                 for r in tool_records
             ]
+            if tool_records
+            else None
+        )
 
         self._message_repo.add(
             conversation_id=conversation_id,
