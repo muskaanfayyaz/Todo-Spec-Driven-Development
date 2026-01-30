@@ -45,21 +45,21 @@ _TOOL_FUNCTIONS: Dict[str, Any] = {
 
 
 def _convert_to_gemini_tools() -> List[FunctionDeclaration]:
+    """Convert TOOL_DEFINITIONS into Gemini FunctionDeclarations"""
+
     tools: List[FunctionDeclaration] = []
 
+    # ⚠️ FIX: use 'name' directly instead of 'function'
     for tool in TOOL_DEFINITIONS:
-        fn = tool.get("function")
-        if not fn:
-            continue
-
         tools.append(
             FunctionDeclaration(
-                name=fn["name"],
-                description=fn.get("description", ""),
-                parameters=fn.get("parameters", {}),
+                name=tool["name"],
+                description=tool.get("description", ""),
+                parameters=tool.get("parameters", {}),
             )
         )
 
+    logger.info(f"Loaded {len(tools)} Gemini tools")
     return tools
 
 
