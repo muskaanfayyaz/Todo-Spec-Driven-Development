@@ -10,7 +10,7 @@
 
 AGENT_CONFIG = {
     "name": "TodoAssistant",
-    "model": "gemini-2.5-flash",  # ✅ Valid Gemini model
+    "model": "gemini-2.5-flash-lite",  # ✅ Valid Gemini model
     "temperature": 0.7,
     "max_tokens": 1024,
 }
