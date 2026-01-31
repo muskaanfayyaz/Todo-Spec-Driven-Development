@@ -178,7 +178,7 @@ class AgentExecutor:
                 system_instruction=SYSTEM_PROMPT,
                 temperature=AGENT_CONFIG.get("temperature", 0.5),
                 max_output_tokens=AGENT_CONFIG.get("max_tokens", 512),
-                tools=GEMINI_TOOLS,
+                tools=[types.Tool(function_declarations=GEMINI_TOOLS)],
                 tool_config=types.ToolConfig(
                     function_calling_config=types.FunctionCallingConfig(
                         mode=tool_calling_mode
