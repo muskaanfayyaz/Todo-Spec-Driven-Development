@@ -172,11 +172,7 @@ class AgentExecutor:
             # --- DYNAMIC TOOL CONFIG ---
             # On the first turn, force the model to call a function.
             # On subsequent turns, allow it to generate a text response.
-            tool_calling_mode = (
-                types.FunctionCallingConfig.Mode.ANY
-                if i == 0
-                else types.FunctionCallingConfig.Mode.AUTO
-            )
+            tool_calling_mode = "any" if i == 0 else "auto"
             
             config = types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
