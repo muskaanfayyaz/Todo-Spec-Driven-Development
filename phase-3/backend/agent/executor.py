@@ -165,17 +165,32 @@ class AgentExecutor:
                 )
             )
 
-        config = types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            temperature=AGENT_CONFIG.get("temperature", 0.5),
-            max_output_tokens=AGENT_CONFIG.get("max_tokens", 512),
-            tools=GEMINI_TOOLS,
-        )
-
         backoff = 1.0
 
         # ✅ LIMIT TOOL CHAINS (prevents RPM burn)
-        for _ in range(5):
+        for i in range(5):
+            # --- DYNAMIC TOOL CONFIG ---
+            # On the first turn, force the model to call a function.
+            # On subsequent turns, allow it to generate a text response.
+            tool_calling_mode = (
+                types.FunctionCallingConfig.Mode.ANY
+                if i == 0
+                else types.FunctionCallingConfig.Mode.AUTO
+            )
+            
+            config = types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=AGENT_CONFIG.get("temperature", 0.5),
+                max_output_tokens=AGENT_CONFIG.get("max_tokens", 512),
+                tools=GEMINI_TOOLS,
+                tool_config=types.ToolConfig(
+                    function_calling_config=types.FunctionCallingConfig(
+                        mode=tool_calling_mode
+                    )
+                )
+            )
+            # --- END DYNAMIC TOOL CONFIG ---
+            
             try:
                 response = _client.models.generate_content(
                     model=self._model_name,
