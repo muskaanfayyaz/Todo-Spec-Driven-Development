@@ -4,7 +4,7 @@
 
 # --- Build Stage ---
 # This stage installs dependencies.
-FROM python:3.9-slim-buster AS builder
+FROM python:3.10-slim-buster AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -29,7 +29,7 @@ COPY phase3/backend /app/phase3/backend
 
 # --- Production Stage ---
 # This stage creates the final, lean production image.
-FROM python:3.9-slim-buster AS production
+FROM python:3.10-slim-buster AS production
 
 # Set the working directory
 WORKDIR /app
@@ -51,4 +51,4 @@ EXPOSE 8000
 
 # The command to run the application
 # It refers to the main:app object in phase3/backend/api/main.py
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "phase3.backend.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
