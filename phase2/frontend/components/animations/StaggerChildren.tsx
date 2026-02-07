@@ -6,7 +6,7 @@
  * Staggers animation of child elements for a cascade effect.
  */
 
-import { motion } from "framer-motion";
+import { motion, Easing } from "framer-motion";
 
 interface StaggerChildrenProps {
   children: React.ReactNode;
@@ -31,7 +31,7 @@ const item = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.4, 0, 0.2, 1],
+      ease: "easeInOut" as Easing,
     },
   },
 };

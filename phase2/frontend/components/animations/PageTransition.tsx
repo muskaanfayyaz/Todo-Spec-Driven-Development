@@ -7,7 +7,7 @@
  * Wraps page content to add enter/exit animations.
  */
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Easing } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 interface PageTransitionProps {
@@ -25,7 +25,7 @@ const variants = {
     y: 0,
     transition: {
       duration: 0.3,
-      ease: [0.4, 0, 0.2, 1],
+      ease: "easeInOut" as Easing,
     },
   },
   exit: {
@@ -33,7 +33,7 @@ const variants = {
     y: -20,
     transition: {
       duration: 0.2,
-      ease: [0.4, 0, 0.2, 1],
+      ease: "easeInOut" as Easing,
     },
   },
 };

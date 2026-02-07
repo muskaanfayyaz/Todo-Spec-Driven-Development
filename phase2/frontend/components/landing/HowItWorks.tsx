@@ -8,7 +8,7 @@
  * Supports light and dark modes.
  */
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { UserPlus, FileEdit, BarChart3, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -59,7 +59,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,

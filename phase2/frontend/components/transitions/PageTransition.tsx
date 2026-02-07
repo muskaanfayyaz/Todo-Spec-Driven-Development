@@ -7,7 +7,7 @@
  * Wrap page content to enable animated transitions between routes.
  */
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Easing } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -33,8 +33,7 @@ export const pageVariants = {
 };
 
 export const pageTransition = {
-  type: "tween",
-  ease: [0.22, 1, 0.36, 1],
+  ease: "easeInOut" as Easing,
   duration: 0.4,
 };
 
@@ -121,7 +120,7 @@ export function ScaleTransition({ children, className }: PageTransitionProps) {
         animate="in"
         exit="out"
         variants={scaleVariants}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.3, ease: "easeInOut" as Easing }}
         className={className}
       >
         {children}
@@ -174,7 +173,7 @@ export function StaggerItem({ children, className }: StaggerItemProps) {
         visible: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+          transition: { duration: 0.4, ease: "easeInOut" as Easing },
         },
       }}
       className={className}

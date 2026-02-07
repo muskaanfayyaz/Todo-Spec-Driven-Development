@@ -1,0 +1,95 @@
+# Default values for the todo-app chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Backend Service Configuration --
+backend:
+  name: todo-backend
+  replicaCount: 1
+
+  image:
+    repository: todo-backend
+    tag: phase4
+    pullPolicy: IfNotPresent # Use IfNotPresent for local images in Minikube
+
+  service:
+    type: NodePort
+    port: 8000
+
+  # Probes for health checking the backend service
+  probes:
+    liveness:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readiness:
+      httpGet:
+        path: /health
+        port: http
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+  # Resource requests and limits for the backend
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  # Environment variables for the backend.
+  # Secrets should be created separately and referenced here.
+  env:
+    secretName: "todo-backend-secrets" # Name of the k8s secret holding the env vars
+    vars:
+      - name: DATABASE_URL
+        key: DATABASE_URL
+      - name: GEMINI_API_KEY
+        key: GEMINI_API_KEY
+
+
+# -- Frontend Service Configuration --
+frontend:
+  name: todo-frontend
+  replicaCount: 1
+
+  image:
+    repository: todo-frontend
+    tag: phase4
+    pullPolicy: IfNotPresent # Use IfNotPresent for local images in Minikube
+
+  service:
+    type: NodePort
+    port: 3000
+
+  # Probes for health checking the frontend service
+  probes:
+    liveness:
+      httpGet:
+        path: /
+        port: http
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    readiness:
+      httpGet:
+        path: /
+        port: http
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+  # Resource requests and limits for the frontend
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  # Environment variables for the frontend
+  env:
+    - name: REACT_APP_BACKEND_URL
+      value: "http://todo-backend:8000" # Internal service communication

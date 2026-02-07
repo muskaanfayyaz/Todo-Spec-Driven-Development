@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Easing } from "framer-motion";
 import {
   Sparkles,
   ArrowRight,
@@ -42,7 +42,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: "easeInOut" as Easing },
   },
 };
 
@@ -52,7 +52,7 @@ const floatVariants = {
     transition: {
       duration: 6,
       repeat: Infinity,
-      ease: "easeInOut",
+      ease: "easeInOut" as Easing,
     },
   },
 };

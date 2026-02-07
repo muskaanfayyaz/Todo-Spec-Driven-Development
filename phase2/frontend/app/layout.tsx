@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import "./globals.css";
+// import "./globals.css";
 import { Header } from "@/components/layout";
 import { Providers } from "@/components/providers";
 import { themeScript } from "@/components/theme";
-import { ChatWrapper } from "@/components/chat/ChatWrapper";
+import ClientChatWrapper from "@/components/chat/ClientChatWrapper"; // Replaced ChatWrapper import
+// import { getSession, getToken } from "@/lib/auth"; // Removed
 
 export const metadata: Metadata = {
   title: "TodoAI - AI-Powered Task Management",
   description: "Full-Stack Multi-User Todo Application with AI-powered productivity features",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -27,7 +28,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           {/* Phase III: AI Chatbot Widget */}
-          <ChatWrapper />
+          <ClientChatWrapper /> {/* Used ClientChatWrapper */}
         </Providers>
       </body>
     </html>
