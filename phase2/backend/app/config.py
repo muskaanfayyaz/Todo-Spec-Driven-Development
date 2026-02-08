@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         """Get all CORS origins including defaults and extras from env."""
+        # Allow all origins if in debug mode for local development (e.g., Minikube)
+        if self.debug:
+            return ["*"]
+
         origins = DEFAULT_CORS_ORIGINS.copy()
         if self.cors_origins_extra:
             try:

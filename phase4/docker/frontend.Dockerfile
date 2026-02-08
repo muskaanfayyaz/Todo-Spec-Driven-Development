@@ -24,6 +24,9 @@ RUN npm install
 COPY phase2/frontend/ /app/
 COPY phase3/frontend/ /app/
 
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 # Build the Next.js application for production
 RUN npm run build
 

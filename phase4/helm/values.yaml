@@ -49,6 +49,11 @@ backend:
         key: DATABASE_URL
       - name: GEMINI_API_KEY
         key: GEMINI_API_KEY
+      - name: BETTER_AUTH_SECRET
+        key: BETTER_AUTH_SECRET
+    extra: # Additional environment variables
+      - name: DEBUG
+        value: "true"
 
 
 # -- Frontend Service Configuration --
