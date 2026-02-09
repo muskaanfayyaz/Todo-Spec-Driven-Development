@@ -1,5 +1,5 @@
 /**
- * Phase III Frontend Exports
+ * Phase III Frontend Exports.
  *
  * All components, hooks, and utilities for the AI chatbot UI.
  * Import these into Phase II frontend to add the chatbot.
