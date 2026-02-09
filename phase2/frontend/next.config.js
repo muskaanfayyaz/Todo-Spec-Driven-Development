@@ -3,7 +3,6 @@ const nextConfig = {
   experimental: {
     externalDir: true,
   },
-  turbopack: {},
   transpilePackages: ['@phase3/frontend'],
   reactStrictMode: true,
   env: {
