@@ -4,8 +4,7 @@
   "private": true,
   "description": "Todo App Phase II - Monorepo with Next.js Frontend and FastAPI Backend",
   "workspaces": [
-    "phase2/frontend",
-    "phase3/frontend"
+    "frontend"
   ],
   "scripts": {
     "dev:frontend": "cd frontend && npm run dev",
