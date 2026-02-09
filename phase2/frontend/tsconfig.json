@@ -27,9 +27,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@phase3/frontend/*": [
-        "../../phase3/frontend/*"
       ]
     }
   },
