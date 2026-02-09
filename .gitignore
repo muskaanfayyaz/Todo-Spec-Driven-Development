@@ -57,7 +57,7 @@ yarn-error.log*
 
 # Vercel
 .vercel
-
+k8s/secret.yaml
 # Phase I (keep as reference)
 # src/ is intentionally tracked for reference
 
