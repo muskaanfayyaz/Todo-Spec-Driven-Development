@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "target": "ES2020",
     "lib": [
       "dom",
@@ -18,7 +17,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -27,9 +25,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@phase3/frontend/*": [
-        "../../phase3/frontend/*"
       ]
     }
   },
