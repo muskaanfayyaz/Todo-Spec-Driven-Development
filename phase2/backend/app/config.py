@@ -10,12 +10,12 @@ from pydantic_settings import BaseSettings
 
 
 # Default CORS origins (always included)
-DEFAULT_CORS_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "https://todo-spec-driven-development-fronte.vercel.app",
-]
+DEFAULT_CORS_ORIGINS = ["*"]  # Allow all origins by default for simplicity; adjust as needed
+    # "http://localhost:3000",
+    # "http://localhost:3001",
+    # "http://localhost:3002",
+    # "https://todo-spec-driven-development-fronte.vercel.app",
+
 
 
 class Settings(BaseSettings):
