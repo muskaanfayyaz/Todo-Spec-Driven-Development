@@ -1,7 +1,7 @@
 "use client";
 
 import { getSession, getToken } from "@/lib/auth";
-import { ChatWrapper } from "@phase3/frontend/components/chat/ChatWrapper";
+import { ChatWrapper } from "./ChatWrapper";
 
 /**
  * ClientChatWrapper

@@ -27,9 +27,14 @@
 
 import { useState, useEffect } from "react";
 import { ChatPanel } from "./ChatPanel";
-import { getSession, getToken } from "@/lib/auth";
+import { Session } from "@/lib/auth";
 
-export function ChatWrapper() {
+interface ChatWrapperProps {
+  getSession: () => Promise<Session | null>;
+  getToken: () => Promise<string | null>;
+}
+
+export function ChatWrapper({ getSession, getToken }: ChatWrapperProps) {
   const [userId, setUserId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -52,7 +57,7 @@ export function ChatWrapper() {
     // Re-check session periodically (every 30s)
     const interval = setInterval(loadSession, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [getSession]);
 
   // Don't render on server
   if (!mounted) {
