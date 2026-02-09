@@ -17,7 +17,14 @@
  *         <Providers>
  *           <Header />
  *           <main>{children}</main>
- *           <ChatWrapper />
+ *           <ChatWrapper getSession={
+             // In Phase II, import getSession from "@/lib/auth"
+             async () => ({ user: { id: "placeholder-user-id" } })
+           } getToken={
+             // In Phase II, import getToken from "@/lib/auth"
+             async () => "placeholder-token"
+           } />
+
  *         </Providers>
  *       </body>
  *     </html>
@@ -28,9 +35,6 @@
 import { useState, useEffect } from "react";
 import { ChatPanel } from "./ChatPanel";
 
-// Phase II auth imports - these paths assume the component is copied
-// into the Phase II frontend or imported via path alias
-// Adjust the import path based on your integration approach
 type GetSessionFn = () => Promise<{ user: { id: string } } | null>;
 type GetTokenFn = () => Promise<string | null>;
 
