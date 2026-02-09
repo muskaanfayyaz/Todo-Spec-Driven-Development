@@ -3,6 +3,8 @@ const nextConfig = {
   experimental: {
     externalDir: true,
   },
+  turbopack: {},
+  transpilePackages: ['@phase3/frontend'],
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
